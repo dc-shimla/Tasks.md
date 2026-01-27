@@ -21,7 +21,12 @@ import { makePersisted } from "@solid-primitives/storage";
 import { DragAndDrop } from "./components/drag-and-drop";
 import { useLocation, useNavigate } from "@solidjs/router";
 import { v7 } from "uuid";
-import { addTagToContent, removeTagFromContent, setDueDateInContent, getTagsFromContent } from "./card-content-utils";
+import {
+  addTagToContent,
+  removeTagFromContent,
+  setDueDateInContent,
+  getTagsFromContent,
+} from "./card-content-utils";
 import "./stylesheets/index.css";
 import { KeyboardNavigationDialog } from "./components/keyboard-navigation-dialog";
 
@@ -55,7 +60,8 @@ function App() {
   const [selectedCards, setSelectedCards] = createSignal(new Set());
   const [focusedCardId, setFocusedCardId] = createSignal(null);
   const [focusedLaneIndex, setFocusedLaneIndex] = createSignal(null);
-  const [hasAutoFocusedFirstCard, setHasAutoFocusedFirstCard] = createSignal(false);
+  const [hasAutoFocusedFirstCard, setHasAutoFocusedFirstCard] =
+    createSignal(false);
   const [showHelpDialog, setShowHelpDialog] = createSignal(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -65,7 +71,7 @@ function App() {
     if ((import.meta.env.BASE_URL || "").endsWith("/")) {
       return import.meta.env.BASE_URL.substring(
         0,
-        import.meta.env.BASE_URL.length - 1
+        import.meta.env.BASE_URL.length - 1,
       );
     }
     return import.meta.env.BASE_URL || "";
@@ -103,10 +109,8 @@ function App() {
   });
 
   const selectedCard = createMemo(() => {
-    const decodedCardName = decodeURIComponent(selectedCardName())
-    const card = cards().find(
-      (card) => `${card.name}.md` === decodedCardName
-    );
+    const decodedCardName = decodeURIComponent(selectedCardName());
+    const card = cards().find((card) => `${card.name}.md` === decodedCardName);
     return card;
   });
 
@@ -139,8 +143,8 @@ function App() {
         Object.entries(resJson).map((entry) => ({
           name: entry[0],
           backgroundColor: entry[1],
-        }))
-      )
+        })),
+      ),
     );
     const sortReq = fetch(`${api}/sort${board()}`, {
       method: "GET",
@@ -154,12 +158,12 @@ function App() {
     const lanesFromApi = resources.map((resource) => resource.name);
     const lanesSortedKeys = Object.keys(manualSort);
     const newLanes = lanesFromApi.toSorted(
-      (a, b) => lanesSortedKeys.indexOf(a) - lanesSortedKeys.indexOf(b)
+      (a, b) => lanesSortedKeys.indexOf(a) - lanesSortedKeys.indexOf(b),
     );
 
     let newCards = resources
       .map((resource) =>
-        resource.files.map((file) => ({ ...file, lane: resource.name }))
+        resource.files.map((file) => ({ ...file, lane: resource.name })),
       )
       .flat();
 
@@ -170,7 +174,7 @@ function App() {
       (tag, index, arr) =>
         arr.findIndex((duplicatedTag) => {
           return duplicatedTag.toLowerCase() === tag.toLowerCase();
-        }) === index
+        }) === index,
     );
     const localTagNames = currentTagsWithoutDuplicates;
     const tagsWithColors = localTagNames.map((tagName) => {
@@ -190,7 +194,7 @@ function App() {
         const newCard = structuredClone(card);
         const cardTagsNames = getTagsByCardContent(card.content) || [];
         newCard.tags = tagsWithColors.filter((tagOption) =>
-          cardTagsNames.includes(tagOption.name)
+          cardTagsNames.includes(tagOption.name),
         );
         const dueDateStringMatch = newCard.content.match(/\[due:(.*?)\]/);
         newCard.dueDate = dueDateStringMatch?.length
@@ -222,7 +226,7 @@ function App() {
 
   const debounceChangeCardContent = debounce(
     (newContent) => changeCardContent(newContent),
-    250
+    250,
   );
 
   function updateTagColors(mapTagToColor) {
@@ -242,8 +246,9 @@ function App() {
     const newCardIndex = structuredClone(
       newCards.findIndex(
         (card) =>
-          card.name === selectedCard().name && card.lane === selectedCard().lane
-      )
+          card.name === selectedCard().name &&
+          card.lane === selectedCard().lane,
+      ),
     );
     const newCard = newCards[newCardIndex];
     newCard.content = newContent;
@@ -254,7 +259,7 @@ function App() {
         mode: "cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: newContent }),
-      }
+      },
     );
     const remoteTagOptions = await fetch(`${api}/tags${board()}`, {
       method: "GET",
@@ -265,20 +270,22 @@ function App() {
           name: entry[0],
           backgroundColor: entry[1],
         }));
-      })
+      }),
     );
     const cardTags = getTagsByCardContent(newContent);
     const cardTagsWithoutDuplicates = cardTags.filter(
       (tag, index, arr) =>
         arr.findIndex((duplicatedTag) => {
           return duplicatedTag.toLowerCase() === tag.toLowerCase();
-        }) === index
+        }) === index,
     );
     const cardTagOptions = cardTagsWithoutDuplicates.map((tagName) => {
-      const remoteTagOption = remoteTagOptions.find(option => option.name === tagName);
-      const tagColor = remoteTagOption?.backgroundColor || getTagBackgroundCssColor(
-        pickTagColorIndexBasedOnHash(tagName)
+      const remoteTagOption = remoteTagOptions.find(
+        (option) => option.name === tagName,
       );
+      const tagColor =
+        remoteTagOption?.backgroundColor ||
+        getTagBackgroundCssColor(pickTagColorIndexBasedOnHash(tagName));
       return {
         name: tagName,
         backgroundColor: tagColor,
@@ -290,7 +297,9 @@ function App() {
     newCard.dueDate = dueDateStringMatch?.length ? dueDateStringMatch[1] : "";
     newCards[newCardIndex] = newCard;
     setCards(newCards);
-    const localTagOptions = cardTagOptions.filter((tag) => !tagsOptions().some(remoteTag => remoteTag.name === tag.name))
+    const localTagOptions = cardTagOptions.filter(
+      (tag) => !tagsOptions().some((remoteTag) => remoteTag.name === tag.name),
+    );
     const allTagOptions = [...tagsOptions(), ...localTagOptions];
     setTagsOptions(allTagOptions);
     navigate(`${basePath()}${board()}/${encodeURIComponent(newCard.name)}.md`);
@@ -322,12 +331,15 @@ function App() {
     const newCards = structuredClone(cards());
     const newCard = { lane };
     const newCardName = v7();
-    await fetch(`${api}/resource${board()}/${encodeURIComponent(lane)}/${encodeURIComponent(newCardName)}.md`, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isFile: true }),
-    });
+    await fetch(
+      `${api}/resource${board()}/${encodeURIComponent(lane)}/${encodeURIComponent(newCardName)}.md`,
+      {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isFile: true }),
+      },
+    );
     newCard.name = newCardName;
     newCard.lastUpdated = new Date().toISOString();
     newCard.createdAt = new Date().toISOString();
@@ -338,12 +350,15 @@ function App() {
 
   function deleteCard(card) {
     const newCards = structuredClone(cards());
-    fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`, {
-      method: "DELETE",
-      mode: "cors",
-    });
+    fetch(
+      `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+      {
+        method: "DELETE",
+        mode: "cors",
+      },
+    );
     const cardsWithoutDeletedCard = newCards.filter(
-      (cardToFind) => cardToFind.name !== card.name
+      (cardToFind) => cardToFind.name !== card.name,
     );
     setCards(cardsWithoutDeletedCard);
   }
@@ -407,15 +422,18 @@ function App() {
   }
 
   function renameLane() {
-    fetch(`${api}/resource${board()}/${encodeURIComponent(laneBeingRenamedName())}`, {
-      method: "PATCH",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ newPath: `${board()}/${newLaneName()}` }),
-    });
+    fetch(
+      `${api}/resource${board()}/${encodeURIComponent(laneBeingRenamedName())}`,
+      {
+        method: "PATCH",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPath: `${board()}/${newLaneName()}` }),
+      },
+    );
     const newLanes = structuredClone(lanes());
     const newLaneIndex = newLanes.findIndex(
-      (laneToFind) => laneToFind === laneBeingRenamedName()
+      (laneToFind) => laneToFind === laneBeingRenamedName(),
     );
     const newLane = newLanes[newLaneIndex];
     const newCards = structuredClone(cards()).map((card) => ({
@@ -436,7 +454,7 @@ function App() {
     });
     const newLanes = structuredClone(lanes());
     const lanesWithoutDeletedCard = newLanes.filter(
-      (laneToFind) => laneToFind !== lane
+      (laneToFind) => laneToFind !== lane,
     );
     setLanes(lanesWithoutDeletedCard);
     const newCards = cards().filter((card) => card.lane !== lane);
@@ -448,15 +466,15 @@ function App() {
     return newCards.sort((a, b) =>
       sortDirection() === "asc"
         ? a.name?.localeCompare(b.name)
-        : b.name?.localeCompare(a.name)
+        : b.name?.localeCompare(a.name),
     );
   }
 
   function sortCardsByTags() {
     const newCards = structuredClone(cards());
     return newCards.sort((a, b) => {
-      const tagNameA = a.tags?.[0]?.name || '';
-      const tagNameB = b.tags?.[0]?.name || '';
+      const tagNameA = a.tags?.[0]?.name || "";
+      const tagNameB = b.tags?.[0]?.name || "";
       return sortDirection() === "asc"
         ? tagNameA.localeCompare(tagNameB)
         : tagNameB.localeCompare(tagNameA);
@@ -494,10 +512,13 @@ function App() {
   function handleDeleteCardsByLane(lane) {
     const cardsToDelete = cards().filter((card) => card.lane === lane);
     for (const card of cardsToDelete) {
-      fetch(`${api}/resource${board()}/${encodeURIComponent(lane)}/${encodeURIComponent(card.name)}.md`, {
-        method: "DELETE",
-        mode: "cors",
-      });
+      fetch(
+        `${api}/resource${board()}/${encodeURIComponent(lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "DELETE",
+          mode: "cors",
+        },
+      );
     }
     const cardsToKeep = cards().filter((card) => card.lane !== lane);
     setCards(cardsToKeep);
@@ -525,7 +546,7 @@ function App() {
   // Get tags that exist on selected cards (for remove tags dropdown)
   const tagsOnSelectedCards = createMemo(() => {
     const selectedCardsList = cards().filter((card) =>
-      selectedCards().has(getCardKey(card))
+      selectedCards().has(getCardKey(card)),
     );
 
     const allTagsOnSelected = new Set();
@@ -539,22 +560,25 @@ function App() {
 
   async function bulkDeleteCards() {
     const cardsToDelete = cards().filter((card) =>
-      selectedCards().has(getCardKey(card))
+      selectedCards().has(getCardKey(card)),
     );
 
     // Delete all selected cards using existing API
     const deletePromises = cardsToDelete.map((card) =>
-      fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`, {
-        method: "DELETE",
-        mode: "cors",
-      })
+      fetch(
+        `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "DELETE",
+          mode: "cors",
+        },
+      ),
     );
 
     await Promise.all(deletePromises);
 
     // Update local state
     const remainingCards = cards().filter(
-      (card) => !selectedCards().has(getCardKey(card))
+      (card) => !selectedCards().has(getCardKey(card)),
     );
     setCards(remainingCards);
     clearSelection(); // Clear after delete since cards are gone
@@ -562,7 +586,7 @@ function App() {
 
   async function bulkAddTags(tagName) {
     const cardsToUpdate = cards().filter((card) =>
-      selectedCards().has(getCardKey(card))
+      selectedCards().has(getCardKey(card)),
     );
 
     // Add tag to each selected card using shared utility function
@@ -577,12 +601,15 @@ function App() {
 
       const newContent = addTagToContent(content, tagName);
 
-      return fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: newContent }),
-      });
+      return fetch(
+        `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: newContent }),
+        },
+      );
     });
 
     await Promise.all(updatePromises);
@@ -592,7 +619,7 @@ function App() {
 
   async function bulkRemoveTags(tagName) {
     const cardsToUpdate = cards().filter((card) =>
-      selectedCards().has(getCardKey(card))
+      selectedCards().has(getCardKey(card)),
     );
 
     // Remove tag from each selected card using shared utility function
@@ -607,12 +634,15 @@ function App() {
 
       const newContent = removeTagFromContent(content, tagName);
 
-      return fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: newContent }),
-      });
+      return fetch(
+        `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: newContent }),
+        },
+      );
     });
 
     await Promise.all(updatePromises);
@@ -622,7 +652,7 @@ function App() {
 
   async function bulkSetDueDate(dueDate) {
     const cardsToUpdate = cards().filter((card) =>
-      selectedCards().has(getCardKey(card))
+      selectedCards().has(getCardKey(card)),
     );
 
     // Set due date for each selected card using shared utility function
@@ -630,12 +660,15 @@ function App() {
       const content = card.content || "";
       const newContent = setDueDateInContent(content, dueDate);
 
-      return fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: newContent }),
-      });
+      return fetch(
+        `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: newContent }),
+        },
+      );
     });
 
     await Promise.all(updatePromises);
@@ -648,14 +681,17 @@ function App() {
     const newCardIndex = newCards.findIndex((card) => card.name === oldName);
     const newCard = newCards[newCardIndex];
     const newCardNameWithoutSpaces = newName.trim();
-    fetch(`${api}/resource${board()}/${encodeURIComponent(newCard.lane)}/${encodeURIComponent(newCard.name)}.md`, {
-      method: "PATCH",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        newPath: `${board()}/${newCard.lane}/${newCardNameWithoutSpaces}.md`,
-      }),
-    });
+    fetch(
+      `${api}/resource${board()}/${encodeURIComponent(newCard.lane)}/${encodeURIComponent(newCard.name)}.md`,
+      {
+        method: "PATCH",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newPath: `${board()}/${newCard.lane}/${newCardNameWithoutSpaces}.md`,
+        }),
+      },
+    );
     newCard.name = newCardNameWithoutSpaces;
     newCards[newCardIndex] = newCard;
     setCards(newCards);
@@ -673,7 +709,7 @@ function App() {
         ...prev,
         [tag.name]: tag.backgroundColor,
       }),
-      {}
+      {},
     );
     const newTagColors = {
       ...allTagsColors,
@@ -684,10 +720,13 @@ function App() {
     const newCardIndex = structuredClone(
       cards().findIndex(
         (card) =>
-          card.name === selectedCard().name && card.lane === selectedCard().lane
-      )
+          card.name === selectedCard().name &&
+          card.lane === selectedCard().lane,
+      ),
     );
-    navigate(`${basePath()}${board()}/${encodeURIComponent(cards()[newCardIndex].name)}.md`);
+    navigate(
+      `${basePath()}${board()}/${encodeURIComponent(cards()[newCardIndex].name)}.md`,
+    );
   }
 
   function validateName(newName, namesList, item) {
@@ -747,15 +786,15 @@ function App() {
       .filter(
         (card) =>
           card.name.toLowerCase().includes(search().toLowerCase()) ||
-          (card.content || "").toLowerCase().includes(search().toLowerCase())
+          (card.content || "").toLowerCase().includes(search().toLowerCase()),
       )
       .filter(
         (card) =>
           filteredTag() === null ||
           card.tags
             ?.map((tag) => tag.name?.toLowerCase())
-            .includes(filteredTag().toLowerCase())
-      )
+            .includes(filteredTag().toLowerCase()),
+      ),
   );
 
   function getCardsFromLane(lane) {
@@ -812,10 +851,10 @@ function App() {
 
   function handleLanesSortChange(changedLane) {
     const lane = lanes().find(
-      (lane) => lane === changedLane.id.slice("lane-".length)
+      (lane) => lane === changedLane.id.slice("lane-".length),
     );
     const newLanes = JSON.parse(JSON.stringify(lanes())).filter(
-      (newLane) => newLane !== lane
+      (newLane) => newLane !== lane,
     );
     const updatedLanes = [
       ...newLanes.slice(0, changedLane.index),
@@ -839,18 +878,21 @@ function App() {
     const oldIndex = cards().findIndex((card) => card.name === cardName);
     const card = cards()[oldIndex];
     const newCardLane = changedCard.to.slice("lane-content-".length);
-    fetch(`${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(cardName)}.md`, {
-      method: "PATCH",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        newPath: `${board()}/${newCardLane}/${cardName}.md`,
-      }),
-    });
+    fetch(
+      `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(cardName)}.md`,
+      {
+        method: "PATCH",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newPath: `${board()}/${newCardLane}/${cardName}.md`,
+        }),
+      },
+    );
     card.lane = newCardLane;
     const newCards = lanes().flatMap((lane) => {
       let laneCards = cards().filter(
-        (card) => card.lane === lane && card.name !== cardName
+        (card) => card.lane === lane && card.name !== cardName,
       );
       if (lane === newCardLane) {
         laneCards = [
@@ -871,7 +913,9 @@ function App() {
     }, 50);
   }
 
-  const disableCardsDrag = createMemo(() => sort() !== "none" || selectionMode());
+  const disableCardsDrag = createMemo(
+    () => sort() !== "none" || selectionMode(),
+  );
 
   createEffect((prev) => {
     document.body.classList.remove(`view-mode-${prev}`);
@@ -910,20 +954,26 @@ function App() {
   createEffect(() => {
     let focusedElement;
     if (focusedCardId()) {
-      focusedElement = document.getElementById(`card-${focusedCardId()}`)?.focus();
+      focusedElement = document
+        .getElementById(`card-${focusedCardId()}`)
+        ?.focus();
     }
     if (focusedLaneIndex()) {
       const laneName = lanes()[focusedLaneIndex()];
       focusedElement = document.getElementById(`lane-${laneName}`)?.focus();
     }
     if (focusedElement) {
-      focusedElement.scrollIntoView()
+      focusedElement.scrollIntoView();
     }
-  })
+  });
 
   function handleMainBoardKeyDown(e) {
     // Don't interfere with input fields
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+    if (
+      e.target.tagName === "INPUT" ||
+      e.target.tagName === "TEXTAREA" ||
+      e.target.tagName === "SELECT"
+    ) {
       return;
     }
 
@@ -935,26 +985,28 @@ function App() {
     const visibleCards = filteredCards();
 
     // Allow certain keys to work even when there are no cards
-    const allowedKeysWithoutCards = ['n', '?', 'Escape'];
+    const allowedKeysWithoutCards = ["n", "?", "Escape"];
     if (!visibleCards.length && !allowedKeysWithoutCards.includes(e.key)) {
       return;
     }
 
-    switch(e.key) {
-      case 'ArrowDown':
-      case 'j': // vim-style navigation
+    switch (e.key) {
+      case "ArrowDown":
+      case "j": // vim-style navigation
         e.preventDefault();
         if (focusedCardId()) {
           // Find the actual focused card and get cards in the same lane
-          const currentCard = cards().find(c => c.name === focusedCardId());
+          const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
             // Alt+Down: Move card down in the lane
             if (e.altKey) {
-              moveCardInLane(currentCard, 'down');
+              moveCardInLane(currentCard, "down");
             } else {
               // Normal Down: Navigate to next card in lane
               const currentLaneCards = getCardsFromLane(currentCard.lane);
-              const currentIndexInLane = currentLaneCards.findIndex(c => c.name === focusedCardId());
+              const currentIndexInLane = currentLaneCards.findIndex(
+                (c) => c.name === focusedCardId(),
+              );
               if (currentIndexInLane < currentLaneCards.length - 1) {
                 const nextCard = currentLaneCards[currentIndexInLane + 1];
                 setFocusedCardId(nextCard.name);
@@ -980,20 +1032,22 @@ function App() {
         }
         break;
 
-      case 'ArrowUp':
-      case 'k': // vim-style navigation
+      case "ArrowUp":
+      case "k": // vim-style navigation
         e.preventDefault();
         if (focusedCardId()) {
           // Find the actual focused card and get cards in the same lane
-          const currentCard = cards().find(c => c.name === focusedCardId());
+          const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
             // Alt+Up: Move card up in the lane
             if (e.altKey) {
-              moveCardInLane(currentCard, 'up');
+              moveCardInLane(currentCard, "up");
             } else {
               // Normal Up: Navigate to previous card in lane
               const currentLaneCards = getCardsFromLane(currentCard.lane);
-              const currentIndexInLane = currentLaneCards.findIndex(c => c.name === focusedCardId());
+              const currentIndexInLane = currentLaneCards.findIndex(
+                (c) => c.name === focusedCardId(),
+              );
               if (currentIndexInLane > 0) {
                 const prevCard = currentLaneCards[currentIndexInLane - 1];
                 setFocusedCardId(prevCard.name);
@@ -1005,7 +1059,9 @@ function App() {
                   setFocusedCardId(null);
                   setFocusedLaneIndex(laneIndex);
                   setTimeout(() => {
-                    document.getElementById(`lane-${currentCard.lane}`)?.focus();
+                    document
+                      .getElementById(`lane-${currentCard.lane}`)
+                      ?.focus();
                   }, 0);
                 }
               }
@@ -1019,12 +1075,12 @@ function App() {
         }
         break;
 
-      case 'ArrowRight':
-      case 'l': // vim-style navigation
+      case "ArrowRight":
+      case "l": // vim-style navigation
         e.preventDefault();
         if (focusedCardId()) {
           // Find the actual focused card from all cards, not just visible filtered ones
-          const currentCard = cards().find(c => c.name === focusedCardId());
+          const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
             const currentLaneIndex = lanes().indexOf(currentCard.lane);
 
@@ -1040,7 +1096,9 @@ function App() {
                 const nextLaneCards = getCardsFromLane(lanes()[i]);
                 if (nextLaneCards.length > 0) {
                   setFocusedCardId(nextLaneCards[0].name);
-                  document.getElementById(`card-${nextLaneCards[0].name}`)?.focus();
+                  document
+                    .getElementById(`card-${nextLaneCards[0].name}`)
+                    ?.focus();
                   break;
                 }
               }
@@ -1076,12 +1134,12 @@ function App() {
         }
         break;
 
-      case 'ArrowLeft':
-      case 'h': // vim-style navigation
+      case "ArrowLeft":
+      case "h": // vim-style navigation
         e.preventDefault();
         if (focusedCardId()) {
           // Find the actual focused card from all cards, not just visible filtered ones
-          const currentCard = cards().find(c => c.name === focusedCardId());
+          const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
             const currentLaneIndex = lanes().indexOf(currentCard.lane);
 
@@ -1097,7 +1155,9 @@ function App() {
                 const prevLaneCards = getCardsFromLane(lanes()[i]);
                 if (prevLaneCards.length > 0) {
                   setFocusedCardId(prevLaneCards[0].name);
-                  document.getElementById(`card-${prevLaneCards[0].name}`)?.focus();
+                  document
+                    .getElementById(`card-${prevLaneCards[0].name}`)
+                    ?.focus();
                   break;
                 }
               }
@@ -1133,46 +1193,48 @@ function App() {
         }
         break;
 
-      case 'Enter':
-      case 'e': // Edit card
+      case "Enter":
+      case "e": // Edit card
         e.preventDefault();
         if (focusedCardId()) {
-          const card = cards().find(c => c.name === focusedCardId());
+          const card = cards().find((c) => c.name === focusedCardId());
           if (card) {
             navigate(`${basePath()}${board()}/${card.name}.md`);
           }
         }
         break;
 
-      case 'n': // New card
+      case "w": // New card
         e.preventDefault();
         if (lanes().length > 0) {
           const currentCard = focusedCardId()
-            ? cards().find(c => c.name === focusedCardId())
+            ? cards().find((c) => c.name === focusedCardId())
             : null;
           const targetLane = currentCard ? currentCard.lane : lanes()[0];
           createNewCard(targetLane);
         }
         break;
 
-      case 'r': // Rename card
+      case "r": // Rename card
         e.preventDefault();
         if (focusedCardId()) {
-          const card = cards().find(c => c.name === focusedCardId());
+          const card = cards().find((c) => c.name === focusedCardId());
           if (card) {
             startRenamingCard(card);
           }
         }
         break;
 
-      case 'd': // Delete card (with confirmation)
+      case "q": // Delete card (with confirmation)
         e.preventDefault();
         if (focusedCardId()) {
-          const card = cards().find(c => c.name === focusedCardId());
+          const card = cards().find((c) => c.name === focusedCardId());
           if (card && confirm(`Delete card "${card.name}"?`)) {
             // Find cards in the same lane for next focus
             const currentLaneCards = getCardsFromLane(card.lane);
-            const currentIndexInLane = currentLaneCards.findIndex(c => c.name === focusedCardId());
+            const currentIndexInLane = currentLaneCards.findIndex(
+              (c) => c.name === focusedCardId(),
+            );
 
             deleteCard(card);
 
@@ -1194,7 +1256,7 @@ function App() {
         }
         break;
 
-      case 'Escape':
+      case "Escape":
         e.preventDefault();
         if (showHelpDialog()) {
           setShowHelpDialog(false);
@@ -1205,7 +1267,7 @@ function App() {
         }
         break;
 
-      case '?': // Help
+      case "?": // Help
         e.preventDefault();
         setShowHelpDialog(true);
         break;
@@ -1214,10 +1276,15 @@ function App() {
 
   return (
     <div
-      ref={(el) => mainContainerRef = el}
+      ref={(el) => (mainContainerRef = el)}
       tabIndex="-1"
       onKeyDown={handleMainBoardKeyDown}
-      style={{ outline: 'none', height: '100%', display: 'flex', 'flex-direction': 'column' }}
+      style={{
+        outline: "none",
+        height: "100%",
+        display: "flex",
+        "flex-direction": "column",
+      }}
     >
       <Header
         search={search()}
@@ -1266,9 +1333,9 @@ function App() {
                       errorMsg={validateName(
                         newLaneName(),
                         lanes().filter(
-                          (lane) => lane !== laneBeingRenamedName()
+                          (lane) => lane !== laneBeingRenamedName(),
                         ),
-                        "lane"
+                        "lane",
                       )}
                       onChange={(newValue) => setNewLaneName(newValue)}
                       onConfirm={renameLane}
@@ -1330,16 +1397,16 @@ function App() {
                                 cards()
                                   .filter(
                                     (card) =>
-                                      card.name !== cardBeingRenamed()?.name
+                                      card.name !== cardBeingRenamed()?.name,
                                   )
                                   .map((card) => card.name),
-                                "card"
+                                "card",
                               )}
                               onChange={(newValue) => setNewCardName(newValue)}
                               onConfirm={() =>
                                 renameCard(
                                   cardBeingRenamed()?.name,
-                                  newCardName()
+                                  newCardName(),
                                 )
                               }
                               onCancel={() => {
@@ -1350,7 +1417,9 @@ function App() {
                                 setTimeout(() => {
                                   if (cardName) {
                                     setFocusedCardId(cardName);
-                                    document.getElementById(`card-${cardName}`)?.focus();
+                                    document
+                                      .getElementById(`card-${cardName}`)
+                                      ?.focus();
                                   }
                                 }, 50);
                               }}
@@ -1363,7 +1432,7 @@ function App() {
                               onDelete={() => deleteCard(card)}
                               onClick={() =>
                                 navigate(
-                                  `${basePath()}${board()}/${encodeURIComponent(card.name)}.md`
+                                  `${basePath()}${board()}/${encodeURIComponent(card.name)}.md`,
                                 )
                               }
                             />
@@ -1395,7 +1464,10 @@ function App() {
                 const cardElement = document.getElementById(`card-${cardName}`);
                 if (cardElement) {
                   cardElement.focus();
-                  cardElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                  cardElement.scrollIntoView({
+                    block: "nearest",
+                    behavior: "smooth",
+                  });
                 }
               }, 50);
             }}
@@ -1410,7 +1482,7 @@ function App() {
                 cards()
                   .filter((card) => card.name !== selectedCard().name)
                   .map((card) => card.name),
-                "card"
+                "card",
               )
             }
             disableImageUpload={false}

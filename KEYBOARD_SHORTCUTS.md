@@ -18,9 +18,9 @@
 | Key            | Action                                                                |
 | -------------- | --------------------------------------------------------------------- |
 | `Enter` or `e` | Open/edit the currently focused card                                  |
-| `n`            | Create a new card in the current lane (or first lane if none focused) |
+| `w`            | Create a new card in the current lane (or first lane if none focused) |
 | `r`            | Rename the currently focused card                                     |
-| `d`            | Delete the currently focused card (with confirmation)                 |
+| `q`            | Delete the currently focused card (with confirmation)                 |
 
 ## General
 
