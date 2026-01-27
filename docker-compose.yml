@@ -1,0 +1,13 @@
+services:
+  tasks.md:
+    build: .
+    container_name: tasks.md
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ~/Documents/local-services/tasks.md/tasks:/tasks
+      - ~/Documents/local-services/tasks.md/config:/config
+    restart: unless-stopped
+    ports:
+      - 9000:8080
