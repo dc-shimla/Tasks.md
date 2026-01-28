@@ -985,7 +985,7 @@ function App() {
     const visibleCards = filteredCards();
 
     // Allow certain keys to work even when there are no cards
-    const allowedKeysWithoutCards = ["n", "?", "Escape"];
+    const allowedKeysWithoutCards = ["d", "?", "Escape"];
     if (!visibleCards.length && !allowedKeysWithoutCards.includes(e.key)) {
       return;
     }
