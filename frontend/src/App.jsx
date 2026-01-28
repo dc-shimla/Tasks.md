@@ -985,7 +985,7 @@ function App() {
     const visibleCards = filteredCards();
 
     // Allow certain keys to work even when there are no cards
-    const allowedKeysWithoutCards = ["n", "?", "Escape"];
+    const allowedKeysWithoutCards = ["d", "?", "q"];
     if (!visibleCards.length && !allowedKeysWithoutCards.includes(e.key)) {
       return;
     }
@@ -1256,7 +1256,7 @@ function App() {
         }
         break;
 
-      case "Escape":
+      case "q":
         e.preventDefault();
         if (showHelpDialog()) {
           setShowHelpDialog(false);

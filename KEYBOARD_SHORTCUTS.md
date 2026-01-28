@@ -24,14 +24,14 @@
 
 ## General
 
-| Key   | Action                                    |
-| ----- | ----------------------------------------- |
-| `Esc` | Clear focus and return to main board view |
-| `?`   | Show keyboard shortcuts help dialog       |
+| Key | Action                                    |
+| --- | ----------------------------------------- |
+| `q` | Clear focus and return to main board view |
+| `?` | Show keyboard shortcuts help dialog       |
 
 ## Expanded Card (Dialog) View
 
 When a card is expanded:
 
-- `Esc` - Close the card and return focus to it on the main board
+- `q` - Close the card and return focus to it on the main board
 - All standard editor shortcuts apply within the content editor
