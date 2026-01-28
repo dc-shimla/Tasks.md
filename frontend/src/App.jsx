@@ -1204,7 +1204,7 @@ function App() {
         }
         break;
 
-      case "w": // New card
+      case "d": // New card
         e.preventDefault();
         if (lanes().length > 0) {
           const currentCard = focusedCardId()
@@ -1225,7 +1225,7 @@ function App() {
         }
         break;
 
-      case "q": // Delete card (with confirmation)
+      case "w": // Delete card (with confirmation)
         e.preventDefault();
         if (focusedCardId()) {
           const card = cards().find((c) => c.name === focusedCardId());
