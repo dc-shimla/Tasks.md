@@ -257,6 +257,11 @@ button.small {
   position: relative;
 }
 
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .view-mode-extended .card,
 .view-mode-regular .card {
   min-height: 75px;

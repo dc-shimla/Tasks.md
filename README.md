@@ -93,10 +93,10 @@ You can customize the application CSS through the `custom.css` (within `/config`
 
 ### Theme Change Note
 
-custom.css is copied to the static directory `/config/stylesheets/` at startup, so remove the file and recreate container to reflect theme changes:
+custom.css is copied to the static directory `/config/stylesheets/` at startup, so remove all files and recreate container to reflect theme changes:
 
 ```bash
-rm /path/to/config/stylesheets/custom.css
+rm -r ~/Documents/local-services/tasks.md/config/stylesheets
 ```
 
 followed by
