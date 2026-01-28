@@ -998,8 +998,8 @@ function App() {
           // Find the actual focused card and get cards in the same lane
           const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
-            // Alt+Down: Move card down in the lane
-            if (e.altKey) {
+            // Cmd/Alt+Down: Move card down in the lane
+            if (e.altKey || e.metaKey) {
               moveCardInLane(currentCard, "down");
             } else {
               // Normal Down: Navigate to next card in lane
@@ -1039,8 +1039,8 @@ function App() {
           // Find the actual focused card and get cards in the same lane
           const currentCard = cards().find((c) => c.name === focusedCardId());
           if (currentCard) {
-            // Alt+Up: Move card up in the lane
-            if (e.altKey) {
+            // Cmd/Alt+Up: Move card up in the lane
+            if (e.altKey || e.metaKey) {
               moveCardInLane(currentCard, "up");
             } else {
               // Normal Up: Navigate to previous card in lane
@@ -1084,8 +1084,8 @@ function App() {
           if (currentCard) {
             const currentLaneIndex = lanes().indexOf(currentCard.lane);
 
-            // Alt+Right: Move card to next lane (if exists)
-            if (e.altKey) {
+            // Cmd/Alt+Right: Move card to next lane (if exists)
+            if (e.altKey || e.metaKey) {
               if (currentLaneIndex < lanes().length - 1) {
                 const nextLane = lanes()[currentLaneIndex + 1];
                 moveCardToLane(currentCard, nextLane);
@@ -1106,8 +1106,8 @@ function App() {
           }
         } else if (focusedLaneIndex() !== null) {
           const currentLaneIdx = focusedLaneIndex();
-          if (e.altKey) {
-            // Alt+Right: move the lane itself one position to the right
+          if (e.altKey || e.metaKey) {
+            // Cmd/Alt+Right: move the lane itself one position to the right
             if (currentLaneIdx < lanes().length - 1) {
               const laneName = lanes()[currentLaneIdx];
               handleLanesSortChange({
@@ -1143,8 +1143,8 @@ function App() {
           if (currentCard) {
             const currentLaneIndex = lanes().indexOf(currentCard.lane);
 
-            // Alt+Left: Move card to previous lane (if exists)
-            if (e.altKey) {
+            // Cmd/Alt+Left: Move card to previous lane (if exists)
+            if (e.altKey || e.metaKey) {
               if (currentLaneIndex > 0) {
                 const prevLane = lanes()[currentLaneIndex - 1];
                 moveCardToLane(currentCard, prevLane);
@@ -1165,8 +1165,8 @@ function App() {
           }
         } else if (focusedLaneIndex() !== null) {
           const currentLaneIdx = focusedLaneIndex();
-          if (e.altKey) {
-            // Alt+Left: move the lane itself one position to the left
+          if (e.altKey || e.metaKey) {
+            // Cmd/Alt+Left: move the lane itself one position to the left
             if (currentLaneIdx > 0) {
               const laneName = lanes()[currentLaneIdx];
               handleLanesSortChange({
@@ -1194,7 +1194,7 @@ function App() {
         break;
 
       case "Enter":
-      case "e": // Edit card
+      case "s": // Edit card
         e.preventDefault();
         if (focusedCardId()) {
           const card = cards().find((c) => c.name === focusedCardId());
@@ -1204,7 +1204,7 @@ function App() {
         }
         break;
 
-      case "d": // New card
+      case "x": // New card
         e.preventDefault();
         if (lanes().length > 0) {
           const currentCard = focusedCardId()
@@ -1215,7 +1215,7 @@ function App() {
         }
         break;
 
-      case "r": // Rename card
+      case "z": // Rename card
         e.preventDefault();
         if (focusedCardId()) {
           const card = cards().find((c) => c.name === focusedCardId());
@@ -1225,7 +1225,7 @@ function App() {
         }
         break;
 
-      case "w": // Delete card (with confirmation)
+      case "a": // Delete card (with confirmation)
         e.preventDefault();
         if (focusedCardId()) {
           const card = cards().find((c) => c.name === focusedCardId());

@@ -17,10 +17,10 @@
 
 | Key            | Action                                                                |
 | -------------- | --------------------------------------------------------------------- |
-| `Enter` or `e` | Open/edit the currently focused card                                  |
-| `d`            | Create a new card in the current lane (or first lane if none focused) |
-| `r`            | Rename the currently focused card                                     |
-| `w`            | Delete the currently focused card (with confirmation)                 |
+| `Enter` or `s` | Open/edit the currently focused card                                  |
+| `x`            | Create a new card in the current lane (or first lane if none focused) |
+| `z`            | Rename the currently focused card                                     |
+| `a`            | Delete the currently focused card (with confirmation)                 |
 
 ## General
 

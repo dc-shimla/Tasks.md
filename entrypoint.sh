@@ -6,7 +6,7 @@ mkdir -p ${CONFIG_DIR}/images/;
 mkdir -p ${CONFIG_DIR}/sort/;
 echo $BASE_PATH
 if [ ! -f "${CONFIG_DIR}/stylesheets/custom.css" ]; then
-  echo "@import url(${BASE_PATH}/stylesheets/color-themes/adwaita.css)" > "${CONFIG_DIR}/stylesheets/custom.css";
+  echo "@import url(${BASE_PATH}/stylesheets/color-themes/catppuccin.css)" > "${CONFIG_DIR}/stylesheets/custom.css";
 fi
 
 cd /app;

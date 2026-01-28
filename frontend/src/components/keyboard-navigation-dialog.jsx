@@ -49,25 +49,25 @@ export function KeyboardNavigationDialog(props) {
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">Alt+↑</td>
+                      <td class="help-dialog__key-cell">Cmd+↑</td>
                       <td class="help-dialog__desc-cell">
                         Move card up within lane
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">Alt+↓</td>
+                      <td class="help-dialog__key-cell">Cmd+↓</td>
                       <td class="help-dialog__desc-cell">
                         Move card down within lane
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">Alt+←</td>
+                      <td class="help-dialog__key-cell">Cmd+←</td>
                       <td class="help-dialog__desc-cell">
                         Move card to previous lane
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">Alt+→</td>
+                      <td class="help-dialog__key-cell">Cmd+→</td>
                       <td class="help-dialog__desc-cell">
                         Move card to next lane
                       </td>
@@ -81,25 +81,25 @@ export function KeyboardNavigationDialog(props) {
                 <table class="help-dialog__table">
                   <tbody>
                     <tr>
-                      <td class="help-dialog__key-cell">Enter or e</td>
+                      <td class="help-dialog__key-cell">Enter or s</td>
                       <td class="help-dialog__desc-cell">
                         Open/edit focused card
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">n</td>
+                      <td class="help-dialog__key-cell">x</td>
                       <td class="help-dialog__desc-cell">
                         Create new card in current lane
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">r</td>
+                      <td class="help-dialog__key-cell">z</td>
                       <td class="help-dialog__desc-cell">
                         Rename focused card
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">d</td>
+                      <td class="help-dialog__key-cell">a</td>
                       <td class="help-dialog__desc-cell">
                         Delete focused card (with confirmation)
                       </td>
