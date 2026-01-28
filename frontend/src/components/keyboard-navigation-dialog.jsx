@@ -101,7 +101,33 @@ export function KeyboardNavigationDialog(props) {
                     <tr>
                       <td class="help-dialog__key-cell">a</td>
                       <td class="help-dialog__desc-cell">
+                        Archive focused card (with confirmation)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="help-dialog__key-cell">d</td>
+                      <td class="help-dialog__desc-cell">
                         Delete focused card (with confirmation)
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="help-dialog__section">
+                <h3 class="help-dialog__section-title">Card Editor</h3>
+                <table class="help-dialog__table">
+                  <tbody>
+                    <tr>
+                      <td class="help-dialog__key-cell">q</td>
+                      <td class="help-dialog__desc-cell">
+                        Open tag input (when card is open)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="help-dialog__key-cell">e</td>
+                      <td class="help-dialog__desc-cell">
+                        Open due date calendar (when card is open)
                       </td>
                     </tr>
                   </tbody>

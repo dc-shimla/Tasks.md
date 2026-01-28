@@ -1,6 +1,8 @@
 TASKS_DIR=/tasks;
 CONFIG_DIR=/config;
+ARCHIVE_DIR=/archive;
 mkdir -p ${TASKS_DIR};
+mkdir -p ${ARCHIVE_DIR};
 mkdir -p ${CONFIG_DIR}/stylesheets/;
 mkdir -p ${CONFIG_DIR}/images/;
 mkdir -p ${CONFIG_DIR}/sort/;
@@ -29,6 +31,7 @@ cp -r ./static/stylesheets/. ${CONFIG_DIR}/stylesheets/;
 if [ -n "$PUID" ] || [ -n "$PGID" ]; then
   chown -R $PUID:$PGID ${CONFIG_DIR};
   chown -R $PUID:$PGID ${TASKS_DIR};
+  chown -R $PUID:$PGID ${ARCHIVE_DIR};
 fi
 
 CONFIG_DIR=$CONFIG_DIR TASKS_DIR=$TASKS_DIR node /api/server.js;

@@ -146,10 +146,21 @@ async function updateResource(ctx) {
     " "
   );
   if (newPath !== oldPath) {
-    await fs.promises.rename(
-      `${TASKS_DIR}/${oldPath}`,
-      `${TASKS_DIR}/${newPath}`
-    );
+    const oldFullPath = `${TASKS_DIR}/${oldPath}`;
+    const newFullPath = `${TASKS_DIR}/${newPath}`;
+
+    try {
+      // Try rename first (works within same filesystem)
+      await fs.promises.rename(oldFullPath, newFullPath);
+    } catch (err) {
+      // If rename fails (e.g., cross-volume move), use copy + delete
+      if (err.code === 'EXDEV') {
+        await fs.promises.copyFile(oldFullPath, newFullPath);
+        await fs.promises.unlink(oldFullPath);
+      } else {
+        throw err;
+      }
+    }
   }
 
   const newContent = ctx.request.body.content;

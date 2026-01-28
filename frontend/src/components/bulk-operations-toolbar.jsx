@@ -4,6 +4,7 @@ import { createSignal, Show, For, onMount, onCleanup, createEffect } from "solid
  * @param {Object} props
  * @param {number} props.selectedCount - Number of selected cards
  * @param {Function} props.onDelete - Callback for bulk delete
+ * @param {Function} props.onArchive - Callback for bulk archive
  * @param {Function} props.onAddTags - Callback for bulk add tags
  * @param {Function} props.onRemoveTags - Callback for bulk remove tags
  * @param {Function} props.onSetDueDate - Callback for bulk set due date
@@ -115,6 +116,15 @@ export function BulkOperationsToolbar(props) {
     }
   }
 
+  function handleArchive() {
+    const confirmed = window.confirm(
+      `Are you sure you want to archive ${props.selectedCount} card${props.selectedCount !== 1 ? 's' : ''}?`
+    );
+    if (confirmed) {
+      props.onArchive();
+    }
+  }
+
   createEffect(() => {
     if (showRemoveTagMenu() && (!props.tagsOnSelectedCards || props.tagsOnSelectedCards.length === 0)) {
       setShowRemoveTagMenu(false);
@@ -185,6 +195,13 @@ export function BulkOperationsToolbar(props) {
             }}
           >
             Set due date
+          </button>
+
+          <button
+            class="bulk-operations-toolbar__button bulk-operations-toolbar__button--warning"
+            onClick={handleArchive}
+          >
+            Archive
           </button>
 
           <button

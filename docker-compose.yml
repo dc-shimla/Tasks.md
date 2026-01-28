@@ -8,6 +8,7 @@ services:
     volumes:
       - ~/Documents/local-services/tasks.md/tasks:/tasks
       - ~/Documents/local-services/tasks.md/config:/config
+      - ~/Documents/local-services/tasks.md/archive:/archive
     restart: unless-stopped
     ports:
       - 9000:8080

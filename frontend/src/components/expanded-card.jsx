@@ -61,6 +61,7 @@ function ExpandedCard(props) {
   let backdropRef;
   let tagsInputRef;
   let editorContainerRef;
+  let dueDateInputRef;
 
   function handleTagRenameChange(newValue) {
     setNewTagName(newValue);
@@ -85,12 +86,24 @@ function ExpandedCard(props) {
     props.onContentChange(newContent);
     editor().content = newContent;
     setNewTagName("");
+
+    // Refocus the editor after adding tag
+    setTimeout(() => {
+      const editorTextArea = editorContainerRef?.childNodes?.[0]?.childNodes?.[2];
+      editorTextArea?.focus();
+    }, 0);
   }
 
   function handleTagRenameCancel() {
     setIsCreatingNewTag(false);
     setNewTagName("");
     setTagNameError(null);
+
+    // Refocus the editor after canceling tag creation
+    setTimeout(() => {
+      const editorTextArea = editorContainerRef?.childNodes?.[0]?.childNodes?.[2];
+      editorTextArea?.focus();
+    }, 0);
   }
 
   function handleAddTagBtnOnClick(event) {
@@ -306,8 +319,12 @@ function ExpandedCard(props) {
       return;
     }
     e?.preventDefault();
-    if (newCardName() || isCreatingNewTag()) {
-      setIsCreatingNewTag(false);
+    if (isCreatingNewTag()) {
+      handleTagRenameCancel();
+      return;
+    }
+    if (newCardName()) {
+      handleCardRenameCancel();
       return;
     }
     props.onClose();
@@ -323,6 +340,12 @@ function ExpandedCard(props) {
     if (e.key === "Escape") {
       e.preventDefault();
       handleDialogCancel();
+    } else if (e.key === "q" && !isCreatingNewTag() && !isCardBeingRenamed()) {
+      e.preventDefault();
+      handleAddTagBtnOnClick(e);
+    } else if (e.key === "e" && !isCreatingNewTag() && !isCardBeingRenamed()) {
+      e.preventDefault();
+      dueDateInputRef?.showPicker();
     }
   }
 
@@ -448,6 +471,9 @@ function ExpandedCard(props) {
                   type="date"
                   value={dueDate()}
                   onChange={handleChangeDueDate}
+                  ref={(el) => {
+                    dueDateInputRef = el;
+                  }}
                 ></input>
               </div>
             </div>

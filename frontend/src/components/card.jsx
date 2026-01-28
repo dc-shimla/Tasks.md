@@ -40,7 +40,9 @@ export function Card(props) {
     }
     const [year, month, day] = props.dueDate.split('-')
     const dueDateLocalTime = new Date(year, month - 1, day);
-    return `Due ${dueDateLocalTime.toLocaleDateString()}`
+    const weekday = dueDateLocalTime.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    const monthDay = dueDateLocalTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return `⏰ By ${weekday}, ${monthDay}`
   })
 
   return (

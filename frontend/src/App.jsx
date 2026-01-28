@@ -363,6 +363,27 @@ function App() {
     setCards(cardsWithoutDeletedCard);
   }
 
+  function archiveCard(card) {
+    const newCards = structuredClone(cards());
+    fetch(
+      `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+      {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPath: `../archive/${encodeURIComponent(card.name)}.md`,
+        }),
+      },
+    );
+    const cardsWithoutArchivedCard = newCards.filter(
+      (cardToFind) => cardToFind.name !== card.name,
+    );
+    setCards(cardsWithoutArchivedCard);
+  }
+
   function moveCardToLane(card, newLane) {
     // Move card to a different lane (used for keyboard shortcuts) by reusing
     // the existing handleCardsSortChange logic used by drag-and-drop.
@@ -582,6 +603,38 @@ function App() {
     );
     setCards(remainingCards);
     clearSelection(); // Clear after delete since cards are gone
+  }
+
+  async function bulkArchiveCards() {
+    const cardsToArchive = cards().filter((card) =>
+      selectedCards().has(getCardKey(card)),
+    );
+
+    // Archive all selected cards using existing API
+    const archivePromises = cardsToArchive.map((card) =>
+      fetch(
+        `${api}/resource${board()}/${encodeURIComponent(card.lane)}/${encodeURIComponent(card.name)}.md`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newPath: `../archive/${encodeURIComponent(card.name)}.md`,
+          }),
+        },
+      ),
+    );
+
+    await Promise.all(archivePromises);
+
+    // Update local state
+    const remainingCards = cards().filter(
+      (card) => !selectedCards().has(getCardKey(card)),
+    );
+    setCards(remainingCards);
+    clearSelection(); // Clear after archive since cards are gone
   }
 
   async function bulkAddTags(tagName) {
@@ -1225,7 +1278,38 @@ function App() {
         }
         break;
 
-      case "a": // Delete card (with confirmation)
+      case "a": // Archive card (with confirmation)
+        e.preventDefault();
+        if (focusedCardId()) {
+          const card = cards().find((c) => c.name === focusedCardId());
+          if (card && confirm(`Archive card "${card.name}"?`)) {
+            // Find cards in the same lane for next focus
+            const currentLaneCards = getCardsFromLane(card.lane);
+            const currentIndexInLane = currentLaneCards.findIndex(
+              (c) => c.name === focusedCardId(),
+            );
+
+            archiveCard(card);
+
+            // Wait for the DOM to update, then focus next or previous card in the same lane
+            setTimeout(() => {
+              if (currentIndexInLane < currentLaneCards.length - 1) {
+                const nextCard = currentLaneCards[currentIndexInLane + 1];
+                setFocusedCardId(nextCard.name);
+                document.getElementById(`card-${nextCard.name}`)?.focus();
+              } else if (currentIndexInLane > 0) {
+                const prevCard = currentLaneCards[currentIndexInLane - 1];
+                setFocusedCardId(prevCard.name);
+                document.getElementById(`card-${prevCard.name}`)?.focus();
+              } else {
+                setFocusedCardId(null);
+              }
+            }, 50);
+          }
+        }
+        break;
+
+      case "d": // Delete card (with confirmation)
         e.preventDefault();
         if (focusedCardId()) {
           const card = cards().find((c) => c.name === focusedCardId());
@@ -1304,6 +1388,7 @@ function App() {
         <BulkOperationsToolbar
           selectedCount={selectedCards().size}
           onDelete={bulkDeleteCards}
+          onArchive={bulkArchiveCards}
           onAddTags={bulkAddTags}
           onRemoveTags={bulkRemoveTags}
           onSetDueDate={bulkSetDueDate}

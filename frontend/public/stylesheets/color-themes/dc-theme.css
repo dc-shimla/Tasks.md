@@ -10,8 +10,8 @@
   --color-alt-3: #b48ead;
   --color-alt-4: #eceff4;
   --color-alt-5: #a3be8c;
-  --color-alt-6: #81a1c1;
-  --color-alt-7: #5e81ac;
+  --color-alt-6: #61127b16;
+  --color-alt-7: #e3bed9;
 }
 
 @media (prefers-color-scheme: light) {
@@ -23,11 +23,11 @@
     --color-background-3: #e8e8e8;
     --color-background-4: #d7ded9;
     --color-alt-1: #ff7272;
-    --color-alt-2: #ffd772;
-    --color-alt-3: #72d5ff;
+    --color-alt-2: #72d5ff;
+    --color-alt-3: #ffa172;
     --color-alt-4: #aa72ff;
-    --color-alt-5: #ffa172;
-    --color-alt-6: #d7ff72;
-    --color-alt-7: #ff72f6;
+    --color-alt-5: #d7ff72;
+    --color-alt-6: #60127b;
+    --color-alt-7: #e10000;
   }
 }

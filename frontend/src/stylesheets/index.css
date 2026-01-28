@@ -314,6 +314,8 @@ button.small {
 .card__due-date {
   display: flex;
   align-items: center;
+  font-weight: bold;
+  color: var(--color-alt-6);
 }
 
 .card__content:not(:empty),
@@ -484,12 +486,8 @@ dialog:not(.dialog--maximized) {
   white-space: nowrap;
 }
 
-.card__due-date--in-time {
-  color: var(--color-alt-3);
-}
-
 .card__due-date--past-time {
-  color: var(--color-alt-1);
+  color: var(--color-alt-7);
 }
 
 .dialog__tags .tag {
@@ -776,6 +774,16 @@ a > * {
   cursor: pointer;
   font-size: 0.875rem;
   transition: all 0.2s;
+}
+
+.bulk-operations-toolbar__button--warning {
+  background: var(--color-alt-3);
+  border-color: var(--color-alt-3);
+  color: white;
+}
+
+.bulk-operations-toolbar__button--warning:hover {
+  opacity: 0.85;
 }
 
 .bulk-operations-toolbar__button--danger {
