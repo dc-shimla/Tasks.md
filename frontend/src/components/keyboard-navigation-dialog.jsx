@@ -119,13 +119,13 @@ export function KeyboardNavigationDialog(props) {
                 <table class="help-dialog__table">
                   <tbody>
                     <tr>
-                      <td class="help-dialog__key-cell">q</td>
+                      <td class="help-dialog__key-cell">[</td>
                       <td class="help-dialog__desc-cell">
                         Open tag input (when card is open)
                       </td>
                     </tr>
                     <tr>
-                      <td class="help-dialog__key-cell">e</td>
+                      <td class="help-dialog__key-cell">]</td>
                       <td class="help-dialog__desc-cell">
                         Open due date calendar (when card is open)
                       </td>

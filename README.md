@@ -129,6 +129,12 @@ Sub-directories can also be opened as their own projects. In this example, by op
 
 More details (and it how it looks within Obsidian) can be found [here](https://github.com/BaldissaraMatheus/Tasks.md/issues/49).
 
+## 📦 Archive
+
+Cards can be archived using the `a` keyboard shortcut or the Archive button in the bulk operations toolbar. Archived cards are moved to a separate `/archive` directory and can be restored by moving them back into a lane.
+
+Images referenced by a card are not moved when the card is archived — they remain in their original location. This means image references will continue to resolve correctly when an archived card is restored.
+
 ## 💻 Technology stack
 
 With the goal of having a good mix of performance and maintainability, the application was built with [SolidJS](https://github.com/solidjs/solid) and [Koa](https://github.com/koajs/koa). It also uses [Stacks-Editor](https://github.com/StackExchange/Stacks-Editor) for text editing and [serve-static](https://github.com/expressjs/serve-static) to serve the css files as-is.
