@@ -1,4 +1,8 @@
+# --- STAGE 1: BUILD STAGE ---
 FROM node:18.20.4-alpine3.20 AS build-stage
+
+# 1. Apply the bypass here for the build stage
+RUN sed -i 's/https/http/g' /etc/apk/repositories
 
 RUN apk add git
 RUN set -eux \
@@ -10,7 +14,11 @@ COPY entrypoint.sh /api/entrypoint.sh
 
 WORKDIR /app
 RUN rm -r src/components/Stacks-Editor
+
+# NOTE: If git clone fails with SSL errors next, you may need:
+# RUN git config --global http.sslVerify false
 RUN git clone https://github.com/BaldissaraMatheus/Stacks-Editor src/components/Stacks-Editor
+
 RUN cd src/components/Stacks-Editor && npm ci --no-audit
 RUN set -eux && npm ci --no-audit --omit=dev
 
@@ -19,9 +27,14 @@ COPY backend/ /api/
 WORKDIR /api
 RUN set -eux && npm ci --no-audit
 
+# --- STAGE 2: FINAL STAGE ---
 FROM alpine:3.20 AS final
 USER root
-RUN set -eux && apk add --no-cache nodejs npm
+
+# 2. Keep the bypass here for the final stage
+RUN sed -i 's/https/http/g' /etc/apk/repositories && \
+    apk add --no-cache nodejs npm
+
 RUN mkdir /stylesheets
 
 COPY --from=build-stage /app /app
