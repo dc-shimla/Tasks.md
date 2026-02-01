@@ -131,9 +131,9 @@ More details (and it how it looks within Obsidian) can be found [here](https://g
 
 ## 📦 Archive
 
-Cards can be archived using the `a` keyboard shortcut or the Archive button in the bulk operations toolbar. Archived cards are moved to a separate `/archive` directory and can be restored by moving them back into a lane.
+Cards can be archived using the `a` keyboard shortcut or the Archive button in the bulk operations toolbar. Archived cards are moved to a separate `/archive` directory.
 
-Images referenced by a card are not moved when the card is archived — they remain in their original location. This means image references will continue to resolve correctly when an archived card is restored.
+When a card is archived, any images it references are automatically moved from the config `images/` folder into `/archive/images/`. To restore an archived card, move the card file back into the desired lane and copy its images from `/archive/images/` back into the config `images/` folder.
 
 ## 💻 Technology stack
 

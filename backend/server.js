@@ -18,6 +18,7 @@ if (BASE_PATH === "/") {
 }
 const CONFIG_DIR = process.env.CONFIG_DIR || 'config';
 const TASKS_DIR = process.env.TASKS_DIR || 'tasks';
+const ARCHIVE_DIR = process.env.ARCHIVE_DIR || 'archive';
 const TITLE = process.env.TITLE || '';
 const PORT = process.env.PORT || 8080;
 
@@ -160,6 +161,37 @@ async function updateResource(ctx) {
       } else {
         throw err;
       }
+    }
+  }
+
+  if (newPath.startsWith('../archive/')) {
+    const archivedContent = await fs.promises.readFile(`${TASKS_DIR}/${newPath}`, 'utf-8');
+    const imageMatches = archivedContent.match(/!\[[^\]]*\]\(([^\s]+)\)/g) || [];
+    const imageFilenames = imageMatches
+      .filter((match) => match.includes('_api/image/'))
+      .map((match) => match.split('_api/image/')[1].slice(0, -1));
+
+    if (imageFilenames.length > 0) {
+      await fs.promises.mkdir(`${ARCHIVE_DIR}/images`, { recursive: true });
+      await Promise.all(imageFilenames.map(async (filename) => {
+        const src = `${CONFIG_DIR}/images/${filename}`;
+        const dest = `${ARCHIVE_DIR}/images/${filename}`;
+        try {
+          await fs.promises.rename(src, dest);
+        } catch (err) {
+          if (err.code === 'EXDEV') {
+            await fs.promises.copyFile(src, dest);
+            await fs.promises.unlink(src);
+          } else if (err.code !== 'ENOENT') {
+            throw err;
+          } else {
+            return;
+          }
+        }
+        if (PUID && PGID) {
+          await fs.promises.chown(dest, PUID, PGID);
+        }
+      }));
     }
   }
 

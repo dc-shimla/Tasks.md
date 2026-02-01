@@ -3,6 +3,7 @@ CONFIG_DIR=/config;
 ARCHIVE_DIR=/archive;
 mkdir -p ${TASKS_DIR};
 mkdir -p ${ARCHIVE_DIR};
+mkdir -p ${ARCHIVE_DIR}/images;
 mkdir -p ${CONFIG_DIR}/stylesheets/;
 mkdir -p ${CONFIG_DIR}/images/;
 mkdir -p ${CONFIG_DIR}/sort/;
@@ -34,4 +35,4 @@ if [ -n "$PUID" ] || [ -n "$PGID" ]; then
   chown -R $PUID:$PGID ${ARCHIVE_DIR};
 fi
 
-CONFIG_DIR=$CONFIG_DIR TASKS_DIR=$TASKS_DIR node /api/server.js;
+CONFIG_DIR=$CONFIG_DIR TASKS_DIR=$TASKS_DIR ARCHIVE_DIR=$ARCHIVE_DIR node /api/server.js;
