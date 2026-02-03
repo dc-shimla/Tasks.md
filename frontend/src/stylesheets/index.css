@@ -1,4 +1,4 @@
-@import url('./reset.css');
+@import url("./reset.css");
 
 :root {
   --accent-color: var(--color-accent);
@@ -9,7 +9,9 @@ body,
 input,
 button,
 select {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 html,
@@ -27,8 +29,8 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 h4 {
@@ -150,12 +152,13 @@ button:hover {
   }
 }
 
-button:active, button.active {
+button:active,
+button.active {
   filter: brightness(0.8);
 }
 
 button svg {
- fill: var(--color-foreground); 
+  fill: var(--color-foreground);
 }
 
 button.small {
@@ -255,6 +258,7 @@ button.small {
   padding: 12px;
   transition: translate 0.25s;
   position: relative;
+  border: 0.1px dashed var(--color-foreground);
 }
 
 .card:focus-visible {
@@ -304,6 +308,9 @@ button.small {
   /* Those are required to override stacks classes */
   margin: 0;
   list-style-type: none;
+  align-self: flex-end;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .card__tags:not(:empty) {
@@ -333,8 +340,11 @@ button.small {
   border-radius: 6px;
   border: 1px solid var(--color-background-4);
   box-sizing: border-box;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.05),
-    0 4px 4px rgba(0, 0, 0, 0.05), 0 6px 8px rgba(0, 0, 0, 0.05),
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 2px rgba(0, 0, 0, 0.05),
+    0 4px 4px rgba(0, 0, 0, 0.05),
+    0 6px 8px rgba(0, 0, 0, 0.05),
     0 8px 16px rgba(0, 0, 0, 0.05);
   background: none;
   display: flex;
@@ -679,7 +689,7 @@ a > * {
   max-height: 3rem;
 }
 
-.view-mode-compact .card__tags  {
+.view-mode-compact .card__tags {
   min-height: 0;
 }
 
@@ -692,9 +702,8 @@ a > * {
   text-overflow: ellipsis;
 }
 
-.view-mode-tight .card__tags  {
+.view-mode-tight .card__tags {
   flex-wrap: nowrap;
-  width: 100%;
   overflow: auto;
   min-height: 0;
 }
@@ -704,11 +713,11 @@ a > * {
   margin-top: 6px;
 }
 
-.view-mode-tight .card__toolbar  {
+.view-mode-tight .card__toolbar {
   gap: 8px;
 }
 
-.view-mode-tight .card .tag  {
+.view-mode-tight .card .tag {
   padding: 2px;
 }
 
