@@ -51,7 +51,7 @@ function App() {
   const [newLaneName, setNewLaneName] = createSignal(null);
   const [cardBeingRenamed, setCardBeingRenamed] = createSignal(null);
   const [newCardName, setNewCardName] = createSignal(null);
-  const [viewMode, setViewMode] = makePersisted(createSignal("regular"), {
+  const [viewMode, setViewMode] = makePersisted(createSignal("tight"), {
     storage: localStorage,
     name: "viewMode",
   });
