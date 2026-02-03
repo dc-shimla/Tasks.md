@@ -33,5 +33,10 @@
 
 When a card is expanded:
 
-- `Esc` - Close the card and return focus to it on the main board
-- All standard editor shortcuts apply within the content editor
+| Key     | Action                        |
+| ------- | ----------------------------- |
+| `Cmd+1` | Open tag input                |
+| `Cmd+2` | Open due date calendar        |
+| `Esc`   | Close the card and return focus to it on the main board |
+
+All standard editor shortcuts apply within the content editor.

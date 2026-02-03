@@ -90,6 +90,7 @@ You can customize the application CSS through the `custom.css` (within `/config`
 - `color-alt-5`: Used as tag color;
 - `color-alt-6`: Used as tag color;
 - `color-alt-7`: Used as tag color;
+- `color-alt-8`: Used as tag color; uses same color as ticket background for transparent effect;
 
 ### Theme Change Note
 

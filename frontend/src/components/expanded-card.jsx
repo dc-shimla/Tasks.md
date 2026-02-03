@@ -340,10 +340,10 @@ function ExpandedCard(props) {
     if (e.key === "Escape") {
       e.preventDefault();
       handleDialogCancel();
-    } else if (e.key === "[" && !isCreatingNewTag() && !isCardBeingRenamed()) {
+    } else if (e.key === "1" && e.metaKey && !isCreatingNewTag() && !isCardBeingRenamed()) {
       e.preventDefault();
       handleAddTagBtnOnClick(e);
-    } else if (e.key === "]" && !isCreatingNewTag() && !isCardBeingRenamed()) {
+    } else if (e.key === "2" && e.metaKey && !isCreatingNewTag() && !isCardBeingRenamed()) {
       e.preventDefault();
       dueDateInputRef?.showPicker();
     }
