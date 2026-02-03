@@ -225,7 +225,7 @@ function ExpandedCard(props) {
     props.onTagColorChange(mapTagToColor)
   }
 
-  const tagOptionsLength = 7;
+  const tagOptionsLength = 8;
   const colorMenuOptions = new Array(tagOptionsLength)
     .fill(1)
     .map((option, i) => ({
