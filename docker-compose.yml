@@ -11,4 +11,4 @@ services:
       - ~/Documents/local-services/tasks.md/archive:/archive
     restart: unless-stopped
     ports:
-      - 9001:8080
+      - 9000:8080
