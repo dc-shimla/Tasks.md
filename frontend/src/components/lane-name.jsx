@@ -1,4 +1,5 @@
 import { createSignal } from "solid-js";
+import { Portal } from "solid-js/web";
 import { Menu } from "./menu";
 import { getButtonCoordinates, handleKeyDown } from "../utils";
 import { IconPlusSm, IconEllipsisVertical } from '@stackoverflow/stacks-icons/icons'
@@ -8,6 +9,8 @@ import { IconPlusSm, IconEllipsisVertical } from '@stackoverflow/stacks-icons/ic
  * @param {Object} props
  * @param {string} props.name
  * @param {number} props.count
+ * @param {boolean} props.isCollapsed - Whether the lane is collapsed
+ * @param {Function} props.onToggleCollapse - Callback for toggle button
  * @param {Function} props.onRenameBtnClick
  * @param {Function} props.onDeleteCards
  * @param {Function} props.onDelete
@@ -52,15 +55,30 @@ export function LaneName(props) {
 
 	return (
 		<>
-			<div
-				class="lane__header-name-and-count"
-				draggable={true}
-				onDragEnter={(e) => e.preventDefault()}
-				onDragStart={props.onDragStart}
-			>
-				<strong class="lane__header-name">{props.name}</strong>
-				<div class="tag">
-					<h5 class="counter">{props.count}</h5>
+			<div class="lane__header-name-and-count-wrapper">
+				<button
+					type="button"
+					title={props.isCollapsed ? "Expand lane" : "Collapse lane"}
+					class="lane__collapse-toggle"
+					onClick={(e) => {
+						e.stopPropagation();
+						props.onToggleCollapse();
+					}}
+				>
+					<span class="lane__collapse-icon">
+						{props.isCollapsed ? '▶' : '▼'}
+					</span>
+				</button>
+				<div
+					class="lane__header-name-and-count"
+					draggable={true}
+					onDragEnter={(e) => e.preventDefault()}
+					onDragStart={props.onDragStart}
+				>
+					<strong class="lane__header-name">{props.name}</strong>
+					<div class="tag">
+						<h5 class="counter">{props.count}</h5>
+					</div>
 				</div>
 			</div>
 			<div class="header-buttons">

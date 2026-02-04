@@ -115,6 +115,20 @@ export function KeyboardNavigationDialog(props) {
               </div>
 
               <div class="help-dialog__section">
+                <h3 class="help-dialog__section-title">Lane Actions</h3>
+                <table class="help-dialog__table">
+                  <tbody>
+                    <tr>
+                      <td class="help-dialog__key-cell">c</td>
+                      <td class="help-dialog__desc-cell">
+                        Toggle collapse/expand for focused lane
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="help-dialog__section">
                 <h3 class="help-dialog__section-title">Card Editor</h3>
                 <table class="help-dialog__table">
                   <tbody>

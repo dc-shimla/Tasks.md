@@ -33,6 +33,7 @@ import { KeyboardNavigationDialog } from "./components/keyboard-navigation-dialo
 function App() {
   const [lanes, setLanes] = createSignal([]);
   const [cards, setCards] = createSignal([]);
+  const [collapsedLanes, setCollapsedLanes] = createSignal([]);
   const [sort, setSort] = makePersisted(createSignal("none"), {
     storage: localStorage,
     name: "sort",
@@ -149,10 +150,14 @@ function App() {
     const sortReq = fetch(`${api}/sort${board()}`, {
       method: "GET",
     }).then((res) => res.json());
-    const [remoteTagOptions, resources, manualSort] = await Promise.all([
+    const collapsedReq = fetch(`${api}/collapsed${board()}`, {
+      method: "GET",
+    }).then((res) => res.json());
+    const [remoteTagOptions, resources, manualSort, collapsedLanesData] = await Promise.all([
       tagsReq,
       resourcesReq,
       sortReq,
+      collapsedReq,
     ]);
 
     const lanesFromApi = resources.map((resource) => resource.name);
@@ -210,6 +215,7 @@ function App() {
     batch(() => {
       setLanes(newLanes);
       setCards(newCards);
+      setCollapsedLanes(collapsedLanesData || []);
       setRenderUID(v7());
     });
   }
@@ -480,6 +486,31 @@ function App() {
     setLanes(lanesWithoutDeletedCard);
     const newCards = cards().filter((card) => card.lane !== lane);
     setCards(newCards);
+  }
+
+  function toggleLaneCollapse(laneName) {
+    const collapsed = new Set(collapsedLanes());
+    if (collapsed.has(laneName)) {
+      collapsed.delete(laneName);
+    } else {
+      collapsed.add(laneName);
+    }
+    const newCollapsedArray = Array.from(collapsed);
+    setCollapsedLanes(newCollapsedArray);
+
+    // Save to server
+    fetch(`${api}/collapsed${board()}`, {
+      method: "PUT",
+      body: JSON.stringify(newCollapsedArray),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  function isLaneCollapsed(laneName) {
+    return collapsedLanes().includes(laneName);
   }
 
   function sortCardsByName() {
@@ -870,6 +901,27 @@ function App() {
   createEffect(() => {
     if (title()) {
       document.title = title();
+    }
+  });
+
+  createEffect(() => {
+    const collapsed = collapsedLanes();
+    const validLanes = lanes();
+    const invalidLanes = collapsed.filter(laneName => !validLanes.includes(laneName));
+
+    if (invalidLanes.length > 0) {
+      const newCollapsed = collapsed.filter(laneName => validLanes.includes(laneName));
+      setCollapsedLanes(newCollapsed);
+
+      // Save to server
+      fetch(`${api}/collapsed${board()}`, {
+        method: "PUT",
+        body: JSON.stringify(newCollapsed),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
     }
   });
 
@@ -1309,6 +1361,14 @@ function App() {
         }
         break;
 
+      case "c": // Toggle lane collapse
+        e.preventDefault();
+        if (focusedLaneIndex() !== null) {
+          const laneName = lanes()[focusedLaneIndex()];
+          toggleLaneCollapse(laneName);
+        }
+        break;
+
       case "d": // Delete card (with confirmation)
         e.preventDefault();
         if (focusedCardId()) {
@@ -1403,12 +1463,18 @@ function App() {
           <For each={lanes()}>
             {(lane, index) => (
               <div
-                class="lane"
+                class={`lane ${isLaneCollapsed(lane) ? 'lane--collapsed' : ''}`}
                 id={`lane-${lane}`}
                 tabIndex={0}
                 onFocus={() => {
                   setFocusedLaneIndex(index());
                   setFocusedCardId(null);
+                }}
+                onDblClick={(e) => {
+                  e.preventDefault();
+                  setFocusedLaneIndex(index());
+                  setFocusedCardId(null);
+                  document.getElementById(`lane-${lane}`)?.focus();
                 }}
               >
                 <header class="lane__header">
@@ -1433,6 +1499,8 @@ function App() {
                     <LaneName
                       name={lane}
                       count={getCardsFromLane(lane).length}
+                      isCollapsed={isLaneCollapsed(lane)}
+                      onToggleCollapse={() => toggleLaneCollapse(lane)}
                       onRenameBtnClick={() => startRenamingLane(lane)}
                       onCreateNewCardBtnClick={() => createNewCard(lane)}
                       onDelete={() => deleteLane(lane)}
@@ -1440,12 +1508,13 @@ function App() {
                     />
                   )}
                 </header>
-                <DragAndDrop.Container
-                  class="lane__content"
-                  group="cards"
-                  id={`lane-content-${lane}`}
-                  onChange={handleCardsSortChange}
-                >
+                <Show when={!isLaneCollapsed(lane)}>
+                  <DragAndDrop.Container
+                    class="lane__content"
+                    group="cards"
+                    id={`lane-content-${lane}`}
+                    onChange={handleCardsSortChange}
+                  >
                   <For each={getCardsFromLane(lane)}>
                     {(card) => (
                       <Card
@@ -1526,7 +1595,8 @@ function App() {
                       />
                     )}
                   </For>
-                </DragAndDrop.Container>
+                  </DragAndDrop.Container>
+                </Show>
               </div>
             )}
           </For>
@@ -1576,6 +1646,15 @@ function App() {
           />
         </Show>
       </Show>
+      <button
+        type="button"
+        class="help-button"
+        title="Keyboard shortcuts (?)"
+        onClick={() => setShowHelpDialog(true)}
+        aria-label="Show keyboard shortcuts"
+      >
+        ?
+      </button>
       <Show when={showHelpDialog()}>
         <KeyboardNavigationDialog onClose={() => setShowHelpDialog(false)} />
       </Show>
