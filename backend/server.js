@@ -280,6 +280,39 @@ async function getSort(ctx) {
 
 router.get("/sort/:path*", getSort);
 
+async function updateCollapsed(ctx) {
+  const subPath = decodeURIComponent(ctx.request.url.substring("/collapsed".length));
+  const newCollapsed = { [subPath]: ctx.request.body || [] };
+  const currentCollapsed = await fs.promises
+    .readFile(`${CONFIG_DIR}/collapsed.json`)
+    .then((res) => JSON.parse(res.toString()))
+    .catch((err) => ({}));
+  const mergedCollapsed = JSON.stringify({ ...(currentCollapsed || {}), ...newCollapsed });
+  await fs.promises.writeFile(
+    `${CONFIG_DIR}/collapsed.json`,
+    mergedCollapsed
+  );
+  if (PUID && PGID) {
+    await fs.promises.chown(`${CONFIG_DIR}/collapsed.json`, PUID, PGID);
+  }
+  ctx.status = 200;
+}
+
+router.put("/collapsed/:path*", updateCollapsed);
+
+async function getCollapsed(ctx) {
+  const subPath = decodeURIComponent(ctx.request.url.substring("/collapsed".length));
+  const collapsed = await fs.promises
+    .readFile(`${CONFIG_DIR}/collapsed.json`)
+    .then((res) => JSON.parse(res.toString()))
+    .catch((err) => ({}));
+  const pathCollapsed = collapsed[subPath] || [];
+  ctx.body = JSON.stringify(pathCollapsed);
+  ctx.status = 200;
+}
+
+router.get("/collapsed/:path*", getCollapsed);
+
 app.use(cors());
 app.use(bodyParser());
 
