@@ -680,7 +680,14 @@ dialog.help-dialog {
 
 a,
 a > * {
-  color: var(--color-accent) !important;
+  color: #0066cc !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  a,
+  a > * {
+    color: #5eb3ff !important;
+  }
 }
 
 .color-preview-option {
